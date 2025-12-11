@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Alerts Viewer</title>
+</head>
+<body>
+    <h2>Live Alerts</h2>
+    <div id="alerts"></div>
+
+    <script>
+        // --- CONNECT TO FASTAPI WEBSOCKET ---
+        const ws = new WebSocket("ws://localhost:8000/ws/alerts");
+
+        ws.onopen = () => {
+            console.log("Connected to WebSocket");
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            const div = document.getElementById("alerts");
+            const p = document.createElement("p");
+            p.textContent = `Camera ${data.cam_id}: ${data.message}`;
+            div.appendChild(p);
+        };
+
+        ws.onclose = () => {
+            console.log("WebSocket closed");
+        };
+    </script>
+</body>
+</html>
